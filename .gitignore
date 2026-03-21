@@ -1,0 +1,3 @@
+# Ignore real private facts
+/facts/*.json
+/facts.local/

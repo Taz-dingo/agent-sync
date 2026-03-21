@@ -1,0 +1,23 @@
+{
+  "facts": {
+    "user.preferred_address": {
+      "value": "<how_to_call_you>",
+      "meta": {
+        "source": "manual",
+        "confidence": "confirmed",
+        "updated_at": "YYYY-MM-DD"
+      }
+    },
+    "search.preference": {
+      "value": {
+        "primary": "tavily",
+        "fallback": "brave_web_search"
+      },
+      "meta": {
+        "source": "manual",
+        "confidence": "likely",
+        "updated_at": "YYYY-MM-DD"
+      }
+    }
+  }
+}
