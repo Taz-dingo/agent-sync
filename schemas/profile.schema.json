@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "syncskl://schemas/profile.schema.json",
+  "title": "syncskl profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "target", "apply"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string" },
+    "target": { "type": "string", "enum": ["openclaw", "claude-code", "codex", "cursor"] },
+    "description": { "type": "string" },
+    "apply": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workspace"],
+      "properties": {
+        "workspace": { "type": "string" },
+        "snippets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to", "mode"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "mode": { "type": "string", "enum": ["copy", "merge"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@
  *   node syncskl/bin/syncskl.js get <key>
  *   node syncskl/bin/syncskl.js search <query>
  *   node syncskl/bin/syncskl.js set <key> --value <json> [--source <text>] [--confidence confirmed|likely|tentative]
+ *   node syncskl/bin/syncskl.js apply --target openclaw --workspace ~/.openclaw/workspace
  */
 
 const fs = require('fs');
@@ -144,6 +145,63 @@ function cmdSet(key, opts) {
   process.stdout.write(`OK set ${key} -> ${path.relative(repoRoot(), file)}\n`);
 }
 
+function expandHome(p) {
+  if (!p) return p;
+  if (p === '~') return process.env.HOME;
+  if (p.startsWith('~/')) return path.join(process.env.HOME, p.slice(2));
+  return p;
+}
+
+function mergeUserMd(dstPath, snippetContent) {
+  // Very small, safe merge:
+  // - If dst missing: write snippet
+  // - If dst exists: append a fenced block marked by syncskl, if not already present
+  const markerStart = '<!-- syncskl:start -->';
+  const markerEnd = '<!-- syncskl:end -->';
+
+  const block = `${markerStart}\n${snippetContent.trim()}\n${markerEnd}\n`;
+
+  if (!fs.existsSync(dstPath)) {
+    fs.writeFileSync(dstPath, block, 'utf8');
+    return { action: 'created' };
+  }
+
+  const existing = fs.readFileSync(dstPath, 'utf8');
+  if (existing.includes(markerStart)) {
+    // replace existing block
+    const re = new RegExp(`${markerStart}[\\s\\S]*?${markerEnd}\\n?`, 'm');
+    const next = existing.replace(re, block);
+    fs.writeFileSync(dstPath, next, 'utf8');
+    return { action: 'updated' };
+  }
+
+  const next = existing.replace(/\s*$/, '\n\n') + block;
+  fs.writeFileSync(dstPath, next, 'utf8');
+  return { action: 'appended' };
+}
+
+function cmdApply(opts) {
+  const target = opts.target;
+  if (!target) die('Usage: syncskl apply --target openclaw --workspace <path>');
+
+  if (target !== 'openclaw') {
+    die(`apply target not implemented yet: ${target}`);
+  }
+
+  const workspace = expandHome(opts.workspace || '~/.openclaw/workspace');
+  const srcSnippet = path.join(syncsklRoot(), 'snippets', 'openclaw', 'USER.md');
+  if (!fs.existsSync(srcSnippet)) die(`Missing snippet: ${srcSnippet}`);
+
+  const dstUser = path.join(workspace, 'USER.md');
+  const snippetContent = fs.readFileSync(srcSnippet, 'utf8');
+
+  // Ensure workspace exists
+  fs.mkdirSync(workspace, { recursive: true });
+
+  const res = mergeUserMd(dstUser, snippetContent);
+  process.stdout.write(`OK apply openclaw USER.md (${res.action}) -> ${dstUser}\n`);
+}
+
 function cmdCheck() {
   // Minimal checks without dependencies:
   // - every facts file parses
@@ -225,6 +283,9 @@ function main() {
   }
   if (cmd === 'check') {
     return cmdCheck();
+  }
+  if (cmd === 'apply') {
+    return cmdApply(args);
   }
 
   die(`Unknown command: ${cmd}`);

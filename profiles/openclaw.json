@@ -1,0 +1,16 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "name": "openclaw-default",
+  "target": "openclaw",
+  "description": "Apply syncskl snippets/facts into an OpenClaw workspace.",
+  "apply": {
+    "workspace": "~/.openclaw/workspace",
+    "snippets": [
+      {
+        "from": "snippets/openclaw/USER.md",
+        "to": "USER.md",
+        "mode": "merge"
+      }
+    ]
+  }
+}

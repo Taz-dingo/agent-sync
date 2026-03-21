@@ -24,6 +24,7 @@ node syncskl/bin/syncskl.js search tavily
 - `syncskl search <query>`
 - `syncskl set <key> --value <json> [--source <text>]`
 - `syncskl check`
+- `syncskl apply --target openclaw --workspace <path>` (v0.1: OpenClaw only)
 
 ## Key rules
 - Every fact must have `value` and `meta.source`.
