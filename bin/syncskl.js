@@ -109,7 +109,7 @@ function cmdSearch(query) {
 
 function cmdSet(key, opts) {
   const valueRaw = opts.value;
-  if (!valueRaw) die('Missing --value (must be valid JSON, e.g. "\"老t\"" or "{\"a\":1}")');
+  if (!valueRaw) die('Missing --value (must be valid JSON, e.g. "\"<name>\"" or "{\"a\":1}")');
 
   let value;
   try {
