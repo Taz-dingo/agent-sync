@@ -1,32 +1,38 @@
-# syncskl
+# agent-sync
 
-A small CLI + repo convention to keep a **Single Source of Truth (SSOT)** for agent/skill behavior.
+`agent-sync` is a local skill for migrating useful agent behavior from a source to a target.
 
-## Goals
-- Keep critical facts/preferences in one place (this repo).
-- Make changes auditable (git history).
-- Make consumption deterministic (strict JSON + schema + checks).
+The source and target may be:
 
-## Layout
-- `syncskl/facts/*.json` — SSOT facts (machine-readable, strict)
-- `syncskl/schemas/*.schema.json` — JSON Schemas for validation
-- `syncskl/bin/syncskl.js` — CLI
+- different devices
+- different runtimes on one device
+- the same runtime on two machines
+- a repo-local setup and a global setup
 
-## Quick start
-```bash
-node syncskl/bin/syncskl.js check
-node syncskl/bin/syncskl.js get user.preferred_name
-node syncskl/bin/syncskl.js search tavily
-```
+This repo no longer treats the problem as a permanent facts database.
+It treats the problem as:
 
-## Commands
-- `syncskl get <key>`
-- `syncskl search <query>`
-- `syncskl set <key> --value <json> [--source <text>]`
-- `syncskl check`
-- `syncskl apply --target openclaw --workspace <path>` (v0.1: OpenClaw only)
+1. extract from source
+2. normalize into a portable bundle
+3. apply to target
 
-## Key rules
-- Every fact must have `value` and `meta.source`.
-- Conflicts are resolved by explicit updates (never silently overwritten).
-- Prefer small, atomic keys.
+## Included
+
+- `SKILL.md` — skill instructions
+- `agents/openai.yaml` — UI metadata
+- `references/source-target-model.md` — migration model
+- `references/target-surfaces.md` — target mapping heuristics
+- `scripts/init_transfer_bundle.py` — scaffold a temporary working bundle
+
+## Typical use
+
+- migrate Claude Code habits into Codex
+- move a tuned Codex setup to a new machine
+- copy project-specific agent behavior from one repo into another
+- port private local skills between environments
+
+## Principle
+
+Do not mirror every file.
+
+Recreate the source agent's useful behavior at the target with the least brittle target-native representation.

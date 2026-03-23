@@ -1,0 +1,7 @@
+interface:
+  display_name: "Agent Sync"
+  short_description: "Migrate agent context across tools or devices"
+  default_prompt: "Use $agent-sync to migrate my agent setup from a source to a target."
+
+policy:
+  allow_implicit_invocation: true
