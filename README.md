@@ -17,6 +17,28 @@ It treats migration as:
 2. infer the durable behavior
 3. recreate that behavior in target-native surfaces
 
+## Install
+
+Install into your Codex skills directory with:
+
+```bash
+python3 scripts/install_skill.py
+```
+
+By default this installs to `$CODEX_HOME/skills/agent-sync` or `~/.codex/skills/agent-sync` when `CODEX_HOME` is unset.
+
+Useful options:
+
+```bash
+python3 scripts/install_skill.py --force
+python3 scripts/install_skill.py --dest /custom/path/agent-sync
+python3 scripts/install_skill.py --include-extras
+```
+
+- default install copies the core skill files only
+- `--include-extras` also copies the worked example, fixtures, and tests
+- `--force` replaces an existing install directory
+
 ## Included
 
 - `SKILL.md` — skill instructions
@@ -25,6 +47,7 @@ It treats migration as:
 - `references/target-surfaces.md` — target heuristics
 - `references/adaptive-migration-playbook.md` — adaptive decision procedure
 - `scripts/init_transfer_bundle.py` — optional scratch bundle scaffold
+- `scripts/install_skill.py` — local installer for the skill package
 - `examples/claude-code-to-codex/` — worked example
 - `fixtures/` + `tests/` — feasibility and regression harness
 
