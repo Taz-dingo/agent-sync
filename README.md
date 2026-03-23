@@ -41,6 +41,13 @@ See `examples/claude-code-to-codex/README.md` for a worked example that:
 - maps them to Codex-native target files
 - shows what gets skipped for safety
 
+Run the executable demo with:
+
+```bash
+python3 scripts/demo_migrate_claude_to_codex.py fixtures/claude-source /tmp/agent-sync-demo
+python3 -m unittest tests.test_demo_migration
+```
+
 ## Principle
 
 Do not mirror every file.

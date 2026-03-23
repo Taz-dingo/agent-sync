@@ -35,3 +35,15 @@ It shows the intended product interface for the skill:
 - end at a target
 - keep only portable behavior
 - leave secrets and machine-local state behind
+
+
+## Run It
+
+From the repo root:
+
+```bash
+python3 scripts/demo_migrate_claude_to_codex.py fixtures/claude-source /tmp/agent-sync-demo
+python3 -m unittest tests.test_demo_migration
+```
+
+The script creates a fresh `bundle/` and `target/` under the output directory, then the test checks that durable instructions were migrated while secrets and machine-specific state were filtered out.
