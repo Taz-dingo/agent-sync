@@ -2,6 +2,8 @@
 
 Map behavior to the target's native surfaces instead of imposing a universal file format.
 
+These are heuristics, not a rigid conversion table.
+
 ## Codex
 
 Prefer these surfaces when present:
@@ -36,10 +38,11 @@ Prefer these surfaces when present:
 - memory folders or note files
 - local helper scripts and prompt snippets
 
-## Generic Mapping Heuristics
+## Selection Heuristics
 
 - Put durable behavior into the smallest native instruction surface.
 - Put reusable procedures into a skill or script, not a long instruction block.
 - Put stable context into a memory note, not a generated config file.
 - Put machine-specific values into references or placeholders.
 - Put unresolved mismatches into the migration report.
+- If several targets could work, choose the one that keeps the target easiest to maintain by humans.

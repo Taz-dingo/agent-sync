@@ -5,9 +5,15 @@ This example shows how `agent-sync` treats a migration from a tuned Claude Code 
 It demonstrates four things:
 
 1. inventory the source surfaces
-2. normalize them into a temporary transfer bundle
+2. normalize them into a temporary bundle
 3. map them onto Codex-native target surfaces
 4. report what was applied and what was skipped
+
+## What This Example Is
+
+This is an evaluation fixture.
+
+It exists to show one concrete migration shape and to give the repo a repeatable feasibility test. It is not the intended product interface and it is not a claim that all future migrations should use the same mappings.
 
 ## Assumed source surfaces
 
@@ -29,13 +35,11 @@ The migration maps those behaviors into:
 
 ## Why this example matters
 
-It shows the intended product interface for the skill:
+It proves three constraints that the real skill must preserve:
 
-- start from a source
-- end at a target
-- keep only portable behavior
-- leave secrets and machine-local state behind
-
+- durable behavior can be extracted and reapplied
+- secrets can be filtered into references instead of copied
+- machine-local state can be excluded from the target
 
 ## Run It
 

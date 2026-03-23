@@ -1,30 +1,39 @@
 ---
 name: agent-sync
-description: Extract, normalize, and apply portable agent context from a source to a target across devices, runtimes, or both. Use when Codex needs to migrate or mirror AI-agent setup between Codex, Claude Code, Cursor, OpenClaw, local skill folders, prompt files, memory files, or project instruction files while filtering secrets and machine-specific state.
+description: Adaptively migrate portable agent context from a source to a target across devices, runtimes, or both. Use when Codex needs to read real source files, infer durable behavior, and recreate that behavior in Codex, Claude Code, Cursor, OpenClaw, local skill folders, prompt files, memory files, or project instruction files while filtering secrets and machine-specific state.
 ---
 
 # Agent Sync
 
 Treat every request as a `source -> target` migration.
 
-Do not start from atomic facts or a permanent preference database unless the user explicitly asks for one. Start from the source environment, extract the behavior that matters, normalize it into a portable bundle, then map it onto the target.
+This skill is prompt-first, not mapping-first.
+
+Do not rely on a rigid conversion table unless the user asks for a deterministic exporter. Read the real source surfaces, infer the durable behavior, and recreate that behavior in the target's native surfaces.
 
 ## Core Model
 
-Use this pipeline:
+Use this reasoning loop:
 
 1. Identify the source.
 2. Identify the target.
-3. Inventory the source surfaces that shape agent behavior.
-4. Normalize what you find into a temporary transfer bundle.
-5. Filter out secrets and machine-bound state.
-6. Map the portable parts onto the target's native surfaces.
+3. Inspect the source surfaces that actually shape agent behavior.
+4. Separate durable behavior from local state.
+5. Re-express durable behavior in a portable mental model.
+6. Choose the smallest target-native surfaces that preserve intent.
 7. Apply conservatively and report what changed.
 
 Read `references/source-target-model.md` for the normalization model.
-Read `references/target-surfaces.md` for common target mappings.
+Read `references/target-surfaces.md` for common target heuristics.
+Read `references/adaptive-migration-playbook.md` for the decision procedure.
 
-## Source Inventory
+## Default Stance
+
+Prefer adaptive reasoning over hardcoded mappings.
+
+The job is not to mirror file trees. The job is to recreate the source agent's useful behavior at the target with the least brittle target-native representation.
+
+## What To Inspect
 
 Inspect only the surfaces that affect agent behavior:
 
@@ -37,9 +46,9 @@ Inspect only the surfaces that affect agent behavior:
 
 Prefer reading real files over asking the user to restate them.
 
-## Normalize Before Applying
+## Portable Categories
 
-Convert the source into these portable categories:
+Normalize what you learn into these categories:
 
 - `identity`: preferred name, tone, response style, communication habits
 - `operating-rules`: durable instructions, constraints, review style, coding defaults
@@ -49,7 +58,7 @@ Convert the source into these portable categories:
 - `references`: env var names, placeholder paths, external dependencies
 - `exclusions`: secrets, caches, logs, temporary state, machine-local artifacts
 
-Do not preserve the source literally when the target has a better native representation.
+These categories are for reasoning. They are not a required on-disk schema.
 
 ## Safety Rules
 
@@ -60,22 +69,23 @@ Do not preserve the source literally when the target has a better native represe
 - Keep target-native formatting instead of forcing a source schema onto the target.
 - If a target has no exact equivalent, preserve intent in the closest native surface plus a short migration note.
 
-## Apply Strategy
+## Target Selection Heuristic
 
 Use this decision order:
 
 1. Reuse target-native skill and instruction surfaces if they exist.
-2. Merge durable behavioral rules before copying any bulky memory.
-3. Carry reusable skills and snippets only after removing source-specific assumptions.
-4. Append a migration note or report when manual follow-up is required.
+2. Put durable behavior into the smallest stable target-native surface.
+3. Put reusable procedures into a skill or script, not a long instruction block.
+4. Carry bulky memory only when it still changes behavior at the target.
+5. Append a migration note or report when manual follow-up is required.
 
 When editing files, preserve unrelated target content.
 
 ## Working Bundle
 
-For non-trivial migrations, create a temporary transfer bundle with `scripts/init_transfer_bundle.py`.
+For non-trivial migrations, you may create a temporary transfer bundle with `scripts/init_transfer_bundle.py`.
 
-Use it to record:
+Use it only as scratch space for:
 
 - source and target labels
 - source inventory
@@ -84,6 +94,12 @@ Use it to record:
 - final report
 
 Delete the bundle after use unless the user wants it kept as documentation.
+
+## Role Of Scripts
+
+Treat bundled scripts and examples as helpers, tests, or evaluation fixtures.
+
+Do not let a demo script define the migration logic when the real source and target provide enough evidence for an adaptive migration.
 
 ## Output Contract
 
@@ -95,9 +111,3 @@ At the end of a migration, report:
 - items skipped and why
 - secrets or machine-specific assumptions left unresolved
 - suggested next manual step if one remains
-
-## Default Stance
-
-Be pragmatic.
-
-The job is not to preserve every file. The job is to recreate the source agent's useful behavior at the target with the least brittle representation.
