@@ -23,6 +23,7 @@ It treats the problem as:
 - `references/source-target-model.md` — migration model
 - `references/target-surfaces.md` — target mapping heuristics
 - `scripts/init_transfer_bundle.py` — scaffold a temporary working bundle
+- `examples/claude-code-to-codex/` — end-to-end example migration
 
 ## Typical use
 
@@ -30,6 +31,15 @@ It treats the problem as:
 - move a tuned Codex setup to a new machine
 - copy project-specific agent behavior from one repo into another
 - port private local skills between environments
+
+## Example
+
+See `examples/claude-code-to-codex/README.md` for a worked example that:
+
+- inventories Claude Code source surfaces
+- normalizes them into a bundle
+- maps them to Codex-native target files
+- shows what gets skipped for safety
 
 ## Principle
 
